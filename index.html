@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>前端人脸身份验证 Demo</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 420px;
+      margin: 20px auto;
+      padding: 0 12px;
+      background-color:#0f172a;
+      color:#e2e8f0;
+    }
+    .box{
+      background:#1e293b;
+      padding:16px;
+      border-radius:10px;
+      margin-bottom:14px;
+    }
+    #video{
+      width:100%;
+      border-radius:8px;
+      background:#000;
+    }
+    canvas{
+      border:1px solid #475569;
+      border-radius:6px;
+    }
+    button{
+      padding:10px 14px;
+      border:none;
+      border-radius:6px;
+      margin:4px;
+      cursor:pointer;
+    }
+    button:disabled{
+      opacity:0.45;
+      cursor:not-allowed;
+    }
+    .success{color:#4ade80;}
+    .error{color:#f87171;}
+    input[type="text"]{
+      width:100%;
+      padding:9px;
+      border-radius:6px;
+      border:1px solid #475569;
+      background:#334155;
+      color:#fff;
+      margin-bottom:10px;
+    }
+    .info-block{
+      background:#334155;
+      padding:10px;
+      border-radius:6px;
+      word-break: break-all;
+      font-size:13px;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/ort.min.js"></script>
+</head>
+<body>
+  <div class="box">
+    <h2>人脸身份验证（浏览器本地）</h2>
+    <div id="status">正在初始化引擎...</div>
+  </div>
+
+  <div class="box">
+    <video id="video" autoplay playsinline muted></video>
+    <div style="margin-top:8px;display:flex;gap:8px;">
+      <div>对齐预览<br><canvas id="previewCanvas" width="112" height="112"></canvas></div>
+    </div>
+    <!-- 隐藏画布用于人脸对齐计算 -->
+    <canvas id="alignCanvas" width="112" height="112" style="display:none;"></canvas>
+  </div>
+
+  <div class="box">
+    <h4>注册新用户</h4>
+    <input type="text" id="inputUsername" placeholder="输入你的用户名">
+    <div>
+      <button id="btnRegister" disabled>注册人脸（保存到本地）</button>
+    </div>
+  </div>
+
+  <div class="box">
+    <h4>人脸登录比对</h4>
+    <button id="btnLogin" disabled>人脸登录验证</button>
+    <div id="result" style="margin-top:10px;"></div>
+    <div class="info-block" id="userInfo"></div>
+  </div>
+
+  <div class="box">
+    <label>上传图片测试：</label>
+    <input type="file" id="fileUpload" accept="image/*">
+    <img id="uploadedImg" style="display:none;max-width:100%;margin-top:8px;border-radius:6px;">
+  </div>
+
+  <div class="box">
+    <button id="btnClearLocal">清空本地全部用户数据</button>
+    <div style="font-size:12px;color:#94a3b8;margin-top:6px">提示：数据保存在浏览器localStorage，清除缓存会丢失所有注册记录</div>
+  </div>
+
+  <script type="module" src="./logic.js"></script>
+</body>
+</html>
